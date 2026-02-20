@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GA24 — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --surface: #fffef9;
+    --ink: #1a1714;
+    --ink-muted: #7a7469;
+    --accent: #c9503a;
+    --accent-warm: #e8a87c;
+    --accent-cool: #4a7c9e;
+    --border: #e2ddd6;
+    --radius: 2px;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── Custom Cursor ── */
+  #cursor {
+    position: fixed; top: 0; left: 0;
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s var(--ease), width 0.3s var(--ease), height 0.3s var(--ease), background 0.3s;
+    mix-blend-mode: multiply;
+  }
+  #cursor-ring {
+    position: fixed; top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s var(--ease), width 0.3s var(--ease), height 0.3s var(--ease), opacity 0.3s;
+    opacity: 0.5;
+  }
+  body.hovering #cursor { width: 16px; height: 16px; }
+  body.hovering #cursor-ring { width: 56px; height: 56px; opacity: 0.2; }
+
+  /* ── Noise Texture overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: transparent;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(245, 242, 236, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--ink-muted);
+    font-size: 0.875rem; font-weight: 500; letter-spacing: 0.04em;
+    text-transform: uppercase;
+    position: relative; padding-bottom: 2px;
+    transition: color 0.2s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: 0; left: 0;
+    width: 0; height: 1px; background: var(--accent);
+    transition: width 0.3s var(--ease);
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ── Hero ── */
+  #hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-circle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero-bg-circle-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(201,80,58,0.08) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    animation: floatA 12s ease-in-out infinite;
+  }
+  .hero-bg-circle-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(74,124,158,0.07) 0%, transparent 70%);
+    bottom: 50px; left: 10%;
+    animation: floatB 15s ease-in-out infinite;
+  }
+  @keyframes floatA {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-30px, 30px) scale(1.05); }
+  }
+  @keyframes floatB {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(20px, -20px) scale(1.03); }
+  }
+  .hero-left { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 500; margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.7rem;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.8s var(--ease) 0.2s forwards;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block; width: 32px; height: 1px; background: var(--accent);
+  }
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+    opacity: 0; transform: translateY(30px);
+    animation: fadeUp 0.9s var(--ease) 0.35s forwards;
+  }
+  .hero-title em { font-style: italic; color: var(--accent); }
+  .hero-desc {
+    font-size: 1.1rem; color: var(--ink-muted); max-width: 42ch;
+    line-height: 1.75; font-weight: 300;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.8s var(--ease) 0.5s forwards;
+  }
+  .hero-cta {
+    margin-top: 2.5rem; display: flex; gap: 1rem; align-items: center;
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.8s var(--ease) 0.65s forwards;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    background: var(--accent); color: #fff;
+    text-decoration: none; font-size: 0.9rem; font-weight: 500;
+    border-radius: var(--radius);
+    transition: transform 0.2s var(--ease), box-shadow 0.2s;
+    box-shadow: 0 2px 12px rgba(201,80,58,0.25);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(201,80,58,0.35); }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    border: 1px solid var(--border); color: var(--ink);
+    text-decoration: none; font-size: 0.9rem; font-weight: 500;
+    border-radius: var(--radius);
+    transition: border-color 0.2s, background 0.2s, transform 0.2s var(--ease);
+  }
+  .btn-ghost:hover { border-color: var(--ink); background: var(--ink); color: #fff; transform: translateY(-2px); }
+
+  .hero-right {
+    display: flex; justify-content: center; align-items: center;
+    position: relative; z-index: 2;
+    opacity: 0; transform: scale(0.95) translateY(20px);
+    animation: fadeScale 1s var(--ease) 0.4s forwards;
+  }
+  .hero-visual {
+    width: 380px; height: 380px;
+    position: relative;
+  }
+  .hero-card {
+    position: absolute;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+  }
+  .hcard-main {
+    width: 260px; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .hcard-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-warm));
+    margin: 0 auto 1rem;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: #fff;
+  }
+  .hcard-name { font-family: 'DM Serif Display', serif; font-size: 1.3rem; }
+  .hcard-tag { font-size: 0.78rem; color: var(--ink-muted); margin-top: 0.25rem; }
+  .hcard-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; justify-content: center; }
+  .pill {
+    font-size: 0.7rem; padding: 0.25rem 0.65rem;
+    border-radius: 100px; border: 1px solid var(--border);
+    color: var(--ink-muted); background: var(--bg);
+  }
+
+  .hcard-float {
+    width: 150px;
+    animation: cardFloat 4s ease-in-out infinite;
+  }
+  .hcard-float-1 { top: 0; right: -20px; animation-delay: 0s; }
+  .hcard-float-2 { bottom: 10px; left: -30px; animation-delay: 1.5s; }
+  @keyframes cardFloat {
+    0%, 100% { transform: translateY(0px) rotate(-1deg); }
+    50% { transform: translateY(-10px) rotate(1deg); }
+  }
+  .hcard-label {
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.4rem;
+  }
+  .hcard-value { font-size: 1.1rem; font-weight: 500; }
+  .hcard-sub { font-size: 0.75rem; color: var(--ink-muted); margin-top: 0.1rem; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeScale {
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* ── Marquee Strip ── */
+  .marquee-strip {
+    background: var(--ink); color: #fff;
+    padding: 0.8rem 0; overflow: hidden;
+    display: flex; align-items: center;
+  }
+  .marquee-track {
+    display: flex; gap: 0; white-space: nowrap;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-item {
+    font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500;
+    padding: 0 2rem; color: rgba(255,255,255,0.6);
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .marquee-dot { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── Section base ── */
+  section { padding: 6rem 3rem; }
+  .section-header { margin-bottom: 3.5rem; }
+  .section-label {
+    font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 500; margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 20px; height: 1px; background: var(--accent);
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    letter-spacing: -0.025em; line-height: 1.1;
+  }
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  /* ── Reveal animations ── */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── About ── */
+  #about {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1.6fr; gap: 5rem; align-items: start;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .about-sidebar { position: sticky; top: 8rem; }
+  .about-photo-wrap {
+    width: 100%; aspect-ratio: 3/4; border-radius: 8px; overflow: hidden;
+    background: linear-gradient(160deg, var(--accent) 0%, var(--accent-warm) 60%, var(--bg) 100%);
+    display: flex; align-items: flex-end; justify-content: center;
+    position: relative; border: 1px solid var(--border);
+  }
+  .about-initials {
+    font-family: 'DM Serif Display', serif;
+    font-size: 6rem; color: rgba(255,255,255,0.25);
+    line-height: 1; padding-bottom: 1.5rem;
+  }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;
+  }
+  .stat-box {
+    padding: 1rem; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg);
+  }
+  .stat-num {
+    font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label { font-size: 0.75rem; color: var(--ink-muted); margin-top: 0.2rem; }
+  .about-text p { color: var(--ink-muted); line-height: 1.8; font-weight: 300; margin-bottom: 1.2rem; }
+  .about-text p strong { color: var(--ink); font-weight: 500; }
+  .skills-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 2rem; }
+  .skill-tag {
+    padding: 0.4rem 0.9rem; border: 1px solid var(--border);
+    border-radius: 100px; font-size: 0.8rem; color: var(--ink-muted);
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    cursor: default;
+  }
+  .skill-tag:hover { border-color: var(--accent); color: var(--accent); background: rgba(201,80,58,0.05); }
+
+  /* ── Projects ── */
+  #projects { max-width: 1200px; margin: 0 auto; }
+  .projects-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s;
+    display: flex; flex-direction: column;
+  }
+  .project-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    border-color: var(--accent);
+  }
+  .project-card.featured {
+    grid-column: span 2;
+  }
+  .project-thumb {
+    height: 200px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .project-card.featured .project-thumb { height: 260px; }
+  .project-thumb-bg {
+    position: absolute; inset: 0;
+    transition: transform 0.5s var(--ease);
+  }
+  .project-card:hover .project-thumb-bg { transform: scale(1.05); }
+  .project-thumb-icon {
+    font-size: 3.5rem; position: relative; z-index: 1;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+  }
+  .project-body { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
+  .project-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.7rem; }
+  .project-tag {
+    font-size: 0.68rem; padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+    font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .tag-java { background: rgba(201,80,58,0.1); color: var(--accent); }
+  .tag-python { background: rgba(74,124,158,0.1); color: var(--accent-cool); }
+  .tag-js { background: rgba(232,168,124,0.15); color: #b07040; }
+  .tag-blender { background: rgba(100,150,100,0.1); color: #4a7c4a; }
+  .tag-lua { background: rgba(130,80,160,0.1); color: #7a4a9c; }
+  .tag-game { background: rgba(60,60,60,0.08); color: var(--ink-muted); }
+  .project-name {
+    font-family: 'DM Serif Display', serif; font-size: 1.25rem;
+    letter-spacing: -0.02em; margin-bottom: 0.4rem;
+  }
+  .project-desc { font-size: 0.88rem; color: var(--ink-muted); line-height: 1.65; flex: 1; }
+  .project-footer {
+    margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .project-link {
+    font-size: 0.8rem; font-weight: 500; color: var(--accent);
+    text-decoration: none; letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 0.3rem;
+    transition: gap 0.2s;
+  }
+  .project-link:hover { gap: 0.6rem; }
+  .project-link-arrow { transition: transform 0.2s; }
+  .project-link:hover .project-link-arrow { transform: translateX(3px); }
+
+  /* ── Gaming / Interests ── */
+  #interests {
+    background: var(--ink); color: #fff;
+    border-top: none;
+  }
+  #interests .section-label { color: var(--accent-warm); }
+  #interests .section-label::before { background: var(--accent-warm); }
+  #interests .section-title { color: #fff; }
+  #interests .section-title em { color: var(--accent-warm); }
+  .interests-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .interest-card {
+    padding: 2rem 1.5rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    transition: background 0.3s, border-color 0.3s, transform 0.3s var(--ease);
+    cursor: default;
+    position: relative; overflow: hidden;
+  }
+  .interest-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,255,255,0.02));
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .interest-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); transform: translateY(-4px); }
+  .interest-card:hover::before { opacity: 1; }
+  .interest-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+  .interest-name { font-family: 'DM Serif Display', serif; font-size: 1.2rem; margin-bottom: 0.4rem; }
+  .interest-desc { font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+
+  /* ── Contact ── */
+  #contact { max-width: 800px; margin: 0 auto; text-align: center; padding: 8rem 3rem; }
+  .contact-big {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 1.5rem;
+  }
+  .contact-big em { font-style: italic; color: var(--accent); }
+  .contact-desc { color: var(--ink-muted); font-size: 1.1rem; font-weight: 300; max-width: 40ch; margin: 0 auto 2.5rem; }
+  .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .contact-link {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.75rem 1.5rem; border: 1px solid var(--border);
+    border-radius: var(--radius); text-decoration: none; color: var(--ink);
+    font-size: 0.9rem; font-weight: 500;
+    transition: all 0.25s var(--ease);
+  }
+  .contact-link:hover { background: var(--ink); color: #fff; border-color: var(--ink); transform: translateY(-2px); }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border); padding: 2rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 0.8rem; color: var(--ink-muted);
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  /* ── Progress bar ── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 2px;
+    background: var(--accent); z-index: 200;
+    width: 0%; transition: width 0.1s linear;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    #hero { grid-template-columns: 1fr; padding-top: 7rem; }
+    .hero-right { display: none; }
+    .about-grid { grid-template-columns: 1fr; }
+    .about-sidebar { position: static; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card.featured { grid-column: span 1; }
+    .interests-grid { grid-template-columns: 1fr 1fr; }
+    nav { padding: 1.2rem 1.5rem; }
+    section { padding: 4rem 1.5rem; }
+    #hero { padding: 7rem 1.5rem 3rem; }
+  }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .interests-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Nav -->
+<nav id="nav">
+  <a href="#" class="nav-logo">G<span>A</span>24</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#interests">Interests</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-bg-circle hero-bg-circle-1"></div>
+  <div class="hero-bg-circle hero-bg-circle-2"></div>
+
+  <div class="hero-left">
+    <p class="hero-eyebrow">Developer & Creator — Shanghai</p>
+    <h1 class="hero-title">
+      Building things<br>that <em>matter.</em>
+    </h1>
+    <p class="hero-desc">
+      Student developer, modder, and designer based in Shanghai. I craft tools, mods, and experiences across code, 3D, and games.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">
+        View Projects <span>→</span>
+      </a>
+      <a href="#contact" class="btn-ghost">Get in touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-visual">
+      <!-- Floating stat cards -->
+      <div class="hero-card hcard-float hcard-float-1">
+        <div class="hcard-label">Languages</div>
+        <div class="hcard-value">6+</div>
+        <div class="hcard-sub">Python, Java, JS, Lua…</div>
+      </div>
+
+      <div class="hero-card hcard-main">
+        <div class="hcard-avatar">G</div>
+        <div class="hcard-name">GA24</div>
+        <div class="hcard-tag">Student Developer · Shanghai 🇨🇳</div>
+        <div class="hcard-pills">
+          <span class="pill">Python</span>
+          <span class="pill">Java</span>
+          <span class="pill">Blender</span>
+          <span class="pill">Linux</span>
+          <span class="pill">Minecraft</span>
+        </div>
+      </div>
+
+      <div class="hero-card hcard-float hcard-float-2">
+        <div class="hcard-label">OS</div>
+        <div class="hcard-value">Arch</div>
+        <div class="hcard-sub">Hyprland WM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <!-- doubled for seamless loop -->
+    <span class="marquee-item"><span class="marquee-dot"></span> Python</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Java</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> JavaScript</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Lua</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Blender 3D</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Arch Linux</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Minecraft Modding</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Obsidian</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Music Production</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Deutsche Schule Shanghai</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Python</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Java</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> JavaScript</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Lua</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Blender 3D</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Arch Linux</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Minecraft Modding</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Obsidian</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Music Production</span>
+    <span class="marquee-item"><span class="marquee-dot"></span> Deutsche Schule Shanghai</span>
+  </div>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-sidebar reveal">
+      <div class="about-photo-wrap">
+        <div class="about-initials">GA</div>
+      </div>
+      <div class="about-stats">
+        <div class="stat-box">
+          <div class="stat-num">6+</div>
+          <div class="stat-label">Languages spoken & coded</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">16</div>
+          <div class="stat-label">Years old, Grade 10</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Human languages</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Projects in mind</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-text">
+      <div class="section-header reveal">
+        <div class="section-label">Who I am</div>
+        <h2 class="section-title">Developer, creator,<br><em>tinkerer.</em></h2>
+      </div>
+      <p class="reveal reveal-delay-1">
+        I'm a 16-year-old student at <strong>Deutsche Schule Shanghai</strong>, passionate about building software that solves real problems. Whether it's a Minecraft mod, a Blender render, or a Linux workflow, I like making things work elegantly.
+      </p>
+      <p class="reveal reveal-delay-2">
+        My day-to-day runs on <strong>Arch Linux</strong> with a custom Hyprland setup, I take notes in <strong>Obsidian</strong>, and I'm fluent in <strong>German, English, and Chinese</strong> — which helps when navigating international communities online.
+      </p>
+      <p class="reveal reveal-delay-3">
+        Outside of screens I get into <strong>music production</strong>, explore VR/AR tech, and dive deep into math and chemistry when exams demand it.
+      </p>
+      <div class="skills-grid reveal">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">Lua</span>
+        <span class="skill-tag">Arch Linux</span>
+        <span class="skill-tag">Hyprland</span>
+        <span class="skill-tag">Blender</span>
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">Gradle</span>
+        <span class="skill-tag">Obsidian</span>
+        <span class="skill-tag">Minecraft Modding</span>
+        <span class="skill-tag">Fabric API</span>
+        <span class="skill-tag">Three.js</span>
+        <span class="skill-tag">Music Production</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects" style="max-width:1200px;margin:0 auto;">
+  <div class="section-header reveal">
+    <div class="section-label">What I've built</div>
+    <h2 class="section-title">Selected <em>projects.</em></h2>
+  </div>
+
+  <div class="projects-grid">
+
+    <div class="project-card featured reveal">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background: linear-gradient(135deg, #2d1b0e 0%, #5c3317 50%, #3a2010 100%);"></div>
+        <div class="project-thumb-icon">🧱</div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag tag-java">Java</span>
+          <span class="project-tag tag-js">JavaScript</span>
+          <span class="project-tag tag-game">Minecraft</span>
+        </div>
+        <div class="project-name">Litematica Sync</div>
+        <div class="project-desc">
+          A collaborative Minecraft building mod that syncs schematic progress across multiple players in real time. Features a client-side scanner, a server backend, and a web visualization dashboard — enabling teams to track build progress block by block.
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link">View project <span class="project-link-arrow">→</span></a>
+          <span style="font-size:0.75rem;color:var(--ink-muted)">WIP</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background: linear-gradient(135deg, #0e1a2d, #1a3a5c);"></div>
+        <div class="project-thumb-icon">🐍</div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag tag-python">Python</span>
+        </div>
+        <div class="project-name">Python Tools</div>
+        <div class="project-desc">
+          Collection of utility scripts and automation tools built in Python — from file management to data processing.
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link">GitHub <span class="project-link-arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background: linear-gradient(135deg, #1a0e2d, #3d1f6b);"></div>
+        <div class="project-thumb-icon">🎮</div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag tag-lua">Lua</span>
+          <span class="project-tag tag-game">Roblox</span>
+        </div>
+        <div class="project-name">Roblox Dev</div>
+        <div class="project-desc">
+          Game scripting and development in Roblox Studio using Lua, exploring game mechanics and monetization systems.
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link">View <span class="project-link-arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background: linear-gradient(135deg, #0e2d1a, #1a5c30);"></div>
+        <div class="project-thumb-icon">🎨</div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag tag-blender">Blender</span>
+        </div>
+        <div class="project-name">3D Modeling & Renders</div>
+        <div class="project-desc">
+          Architectural models, abstract scenes, and product renders made in Blender. Exploring procedural textures and geometry nodes.
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link">Gallery <span class="project-link-arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-thumb">
+        <div class="project-thumb-bg" style="background: linear-gradient(135deg, #2d200e, #6b4a1a);"></div>
+        <div class="project-thumb-icon">🌐</div>
+      </div>
+      <div class="project-body">
+        <div class="project-tags">
+          <span class="project-tag tag-js">JavaScript</span>
+          <span class="project-tag tag-js">Three.js</span>
+        </div>
+        <div class="project-name">3D Web Visualizations</div>
+        <div class="project-desc">
+          Interactive 3D scenes running in the browser using Three.js — from bridge models to abstract geometry experiments.
+        </div>
+        <div class="project-footer">
+          <a href="#" class="project-link">Demo <span class="project-link-arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Interests -->
+<section id="interests">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-header reveal" style="max-width:500px;">
+      <div class="section-label">Beyond the code</div>
+      <h2 class="section-title">Things I'm <em>into.</em></h2>
+    </div>
+    <div class="interests-grid">
+      <div class="interest-card reveal">
+        <div class="interest-icon">⛏️</div>
+        <div class="interest-name">Minecraft</div>
+        <div class="interest-desc">Modding with Fabric API, collaborative building, redstone engineering, and server development.</div>
+      </div>
+      <div class="interest-card reveal reveal-delay-1">
+        <div class="interest-icon">🎵</div>
+        <div class="interest-name">Music Production</div>
+        <div class="interest-desc">Producing tracks and exploring sound design in my free time. Always have headphones nearby.</div>
+      </div>
+      <div class="interest-card reveal reveal-delay-2">
+        <div class="interest-icon">🥽</div>
+        <div class="interest-name">VR / AR</div>
+        <div class="interest-desc">Exploring immersive tech — from Meta Quest setups to virtual desktop productivity workflows.</div>
+      </div>
+      <div class="interest-card reveal reveal-delay-3">
+        <div class="interest-icon">🐧</div>
+        <div class="interest-name">Linux</div>
+        <div class="interest-desc">Daily driving Arch Linux with Hyprland. Obsessed with dotfiles, system optimization, and terminal aesthetics.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="reveal">
+    <div class="section-label" style="justify-content:center;margin-bottom:1rem;">Get in touch</div>
+    <h2 class="contact-big">Let's build<br>something <em>cool.</em></h2>
+    <p class="contact-desc">Have a project idea, collab proposal, or just want to say hi? I'm always open to interesting conversations.</p>
+    <div class="contact-links">
+      <a href="mailto:hello@ga24.dev" class="contact-link">
+        ✉️ Email me
+      </a>
+      <a href="https://github.com/" target="_blank" class="contact-link">
+        🐙 GitHub
+      </a>
+      <a href="#" class="contact-link">
+        💬 Discord
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <span>© 2026 GA24 — Shanghai</span>
+  <span>Built with HTML, CSS & JS · <a href="#">Source</a></span>
+</footer>
+
+<script>
+  // ── Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animCursor() {
+    cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+  document.querySelectorAll('a, button, .project-card, .interest-card, .skill-tag').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+  });
+
+  // ── Progress bar
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const s = document.documentElement.scrollTop;
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (s / h * 100) + '%';
+  });
+
+  // ── Sticky nav
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  // ── Smooth anchor scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
