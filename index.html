@@ -13,6 +13,7 @@
 </head>
 
 <body>
+  <canvas id="bg-canvas"></canvas>
 
   <!-- ===== Navigation ===== -->
   <nav class="navbar" id="navbar">
@@ -118,7 +119,7 @@
 
       <div class="skills-grid">
         <div class="skill-card reveal">
-          <div class="skill-card-icon">💻</div>
+          <div class="skill-card-icon"><img src="https://cdn.simpleicons.org/python/3776AB" alt="Python"></div>
           <h3 data-i18n="skillProgTitle">Programming</h3>
           <p data-i18n="skillProgDesc">Actively learning JavaScript and Python, building real projects with AI-assisted
             development. Java experience from Minecraft modding with Fabric API.</p>
@@ -132,7 +133,7 @@
         </div>
 
         <div class="skill-card reveal reveal-delay-1">
-          <div class="skill-card-icon">🐧</div>
+          <div class="skill-card-icon"><img src="https://cdn.simpleicons.org/archlinux/1793D1" alt="Arch Linux"></div>
           <h3 data-i18n="skillSysTitle">Systems & Environment</h3>
           <p data-i18n="skillSysDesc">Daily driving Arch Linux (Omarchy) with Hyprland Wayland compositor. Managing
             end-to-end Linux systems — from audio pipelines to desktop portals.</p>
@@ -145,7 +146,7 @@
         </div>
 
         <div class="skill-card reveal reveal-delay-2">
-          <div class="skill-card-icon">🛠️</div>
+          <div class="skill-card-icon"><img src="https://cdn.simpleicons.org/obsidian/7C3AED" alt="Obsidian"></div>
           <h3 data-i18n="skillWorkflowTitle">Workflow & Tools</h3>
           <p data-i18n="skillWorkflowDesc">Structured workflows using Obsidian, LaTeX, Blender, and AI-assisted
             development for rapid prototyping and shipping.</p>
@@ -158,7 +159,14 @@
         </div>
 
         <div class="skill-card reveal reveal-delay-3">
-          <div class="skill-card-icon">🤖</div>
+          <div class="skill-card-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14l-4-4 1.41-1.41L11 13.17l5.59-5.59L18 9l-7 7z"
+                opacity="0.3" />
+              <path d="M17 7l-5 5-5-5-2 2 7 7 7-7-2-2z" />
+              <circle cx="12" cy="5" r="1.5" />
+              <path d="M12 2a1.5 1.5 0 0 0 0 3 1.5 1.5 0 0 0 0-3zM7 19h10v2H7z" opacity="0.5" />
+            </svg></div>
           <h3 data-i18n="skillVibeTitle">Vibe Coding</h3>
           <p data-i18n="skillVibeDesc">Using AI tools to bring ideas to life rapidly, even in unfamiliar languages and
             frameworks. Understanding what to build matters more than memorizing how.</p>
@@ -189,6 +197,7 @@
           <div class="project-card-image">🔄</div>
           <div class="project-card-body">
             <span class="project-tag" data-i18n="projLitematicaTag">Minecraft Mod</span>
+            <span class="project-tag project-tag-wip">WIP</span>
             <h3 data-i18n="projLitematicaTitle">Litematica Sync</h3>
             <p data-i18n="projLitematicaDesc">A Fabric-based mod that synchronizes schematic data across a team in real
               time, enabling large-scale collaborative building with complex server-side coordination logic.</p>
@@ -203,7 +212,9 @@
 
         <!-- SelfObserver -->
         <div class="project-card reveal reveal-delay-1">
-          <div class="project-card-image">👁️</div>
+          <div class="project-card-image">
+            <img src="assets/selfobserver.png" alt="SelfObserver UI Dashboard" loading="lazy">
+          </div>
           <div class="project-card-body">
             <span class="project-tag" data-i18n="projSelfObserverTag">AI Tool</span>
             <h3 data-i18n="projSelfObserverTitle">SelfObserver</h3>
@@ -219,7 +230,9 @@
 
         <!-- .schem to 3D -->
         <div class="project-card reveal reveal-delay-2">
-          <div class="project-card-image">🧊</div>
+          <div class="project-card-image">
+            <img src="assets/.schem to 3D object.png" alt=".schem to 3D Converter Output" loading="lazy">
+          </div>
           <div class="project-card-body">
             <span class="project-tag" data-i18n="projSchemTag">3D Tool</span>
             <h3 data-i18n="projSchemTitle">.schem to 3D Converter</h3>
@@ -238,6 +251,7 @@
           <div class="project-card-image">🎮</div>
           <div class="project-card-body">
             <span class="project-tag" data-i18n="projRobloxTag">Game Dev</span>
+            <span class="project-tag project-tag-wip">WIP</span>
             <h3 data-i18n="projRobloxTitle">Roblox Experiences</h3>
             <p data-i18n="projRobloxDesc">Built several Roblox games including Escape the Brainrot Factory — custom
               gacha mechanics, rarity tiers, and visual effects.</p>
@@ -251,7 +265,9 @@
 
         <!-- Three.js -->
         <div class="project-card reveal reveal-delay-1">
-          <div class="project-card-image">🌉</div>
+          <div class="project-card-image">
+            <img src="assets/bruecke.png" alt="Three.js Bridge Simulation" loading="lazy">
+          </div>
           <div class="project-card-body">
             <span class="project-tag" data-i18n="projThreeTag">3D Web</span>
             <h3 data-i18n="projThreeTitle">Three.js Visualizations</h3>
@@ -267,7 +283,9 @@
 
         <!-- AI Presentations -->
         <div class="project-card reveal reveal-delay-2">
-          <div class="project-card-image">📊</div>
+          <div class="project-card-image">
+            <img src="assets/alcohol.png" alt="AI-Powered Presentation Slide" loading="lazy">
+          </div>
           <div class="project-card-body">
             <span class="project-tag" data-i18n="projPresentTag">AI Content</span>
             <h3 data-i18n="projPresentTitle">AI-Powered Presentations</h3>
@@ -277,6 +295,24 @@
               <span>AI Generation</span>
               <span>Chemistry</span>
               <span>Design</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3D Modelling -->
+        <div class="project-card reveal">
+          <div class="project-card-image">
+            <img src="assets/3D-modelling.png" alt="3D Modelling in Blender" loading="lazy">
+          </div>
+          <div class="project-card-body">
+            <span class="project-tag">3D Art</span>
+            <h3>3D Modelling</h3>
+            <p>Creating detailed 3D models and scenes in Blender — from architectural visualization to stylized assets
+              and renders.</p>
+            <div class="project-tech">
+              <span>Blender</span>
+              <span>3D Modelling</span>
+              <span>Rendering</span>
             </div>
           </div>
         </div>
@@ -295,7 +331,11 @@
 
       <div class="community-grid">
         <div class="community-card reveal">
-          <div class="community-card-icon">🖥️</div>
+          <div class="community-card-icon"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+              <path
+                d="M14.5 2H9.5C7.57 2 6 3.57 6 5.5V18.5C6 20.43 7.57 22 9.5 22H14.5C16.43 22 18 20.43 18 18.5V5.5C18 3.57 16.43 2 14.5 2zM12 20C11.17 20 10.5 19.33 10.5 18.5S11.17 17 12 17s1.5.67 1.5 1.5S12.83 20 12 20zM15 15H9V5h6v10z" />
+              <path d="M9.5 7L11 9.5 9.5 12h2L13 9.5 11.5 7h-2z" opacity="0.7" />
+            </svg></div>
           <h3 data-i18n="commServerTitle">Minecraft Server</h3>
           <p class="card-detail" data-i18n="commServerDetail">mc.dssy.fun</p>
           <p data-i18n="commServerDesc">Running the official Fabric-modded Minecraft server for Deutsche Schule
@@ -437,10 +477,20 @@
               </div>
             </div>
             <div class="game-item">
-              <span class="game-item-icon"><img src="https://cdn.simpleicons.org/ea/ffffff" alt="F1 23 / Forza"></span>
+              <span class="game-item-icon"><img src="https://cdn.simpleicons.org/f1/E10600" alt="F1 23"></span>
               <div class="game-item-info">
-                <h4 data-i18n="gameRacing">F1 23 / Forza</h4>
-                <p data-i18n="gameRacingDesc">Motorsport itch, scratched</p>
+                <h4 data-i18n="gameF1">F1 23</h4>
+                <p data-i18n="gameF1Desc">Sim racing — precision & strategy</p>
+              </div>
+            </div>
+            <div class="game-item">
+              <span class="game-item-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                </svg></span>
+              <div class="game-item-info">
+                <h4 data-i18n="gameForza">Forza Horizon</h4>
+                <p data-i18n="gameForzaDesc">Chill open-world cruising</p>
               </div>
             </div>
             <div class="game-item">
@@ -605,8 +655,11 @@
 
   <!-- ===== Back to Top ===== -->
   <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+  <div id="cursor-glow"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.min.js"></script>
   <script src="script.js"></script>
+  <script src="effects.js"></script>
 </body>
 
 </html>

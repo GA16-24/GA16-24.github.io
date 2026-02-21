@@ -82,6 +82,33 @@
 }
 
 
+
+/* ===== 3D Effects Layer ===== */
+#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  will-change: transform, opacity;
+}
+
+
 /* ===== Reset & Base ===== */
 *,
 *::before,
@@ -608,6 +635,17 @@ section {
   color: var(--text-primary);
 }
 
+.skill-card-icon img {
+  width: 28px;
+  height: 28px;
+}
+
+.skill-card-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+}
+
 .skill-card h3 {
   margin-bottom: 12px;
 }
@@ -653,6 +691,24 @@ section {
   border-radius: 0;
   display: flex;
   flex-direction: column;
+  position: relative;
+  --spot-x: 50%;
+  --spot-y: 50%;
+  --spot-op: 0;
+  will-change: transform;
+  transition: transform 0.5s cubic-bezier(0.03, 0.98, 0.52, 0.99);
+  transform-style: preserve-3d;
+}
+
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--spot-x) var(--spot-y), rgba(200, 169, 126, 0.12) 0%, transparent 60%);
+  opacity: var(--spot-op);
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .project-card:hover .project-card-image img {
@@ -664,6 +720,10 @@ section {
   background: var(--bg-tertiary);
   overflow: hidden;
   margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
 }
 
 .project-card-image img {
@@ -693,6 +753,12 @@ section {
   letter-spacing: 0.05em;
   margin-bottom: 12px;
   width: fit-content;
+}
+
+.project-tag-wip {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+  margin-left: 6px;
 }
 
 .project-card-body h3 {
@@ -745,6 +811,17 @@ section {
 .community-card-icon {
   font-size: 2rem;
   margin-bottom: 16px;
+}
+
+.community-card-icon img {
+  width: 32px;
+  height: 32px;
+}
+
+.community-card-icon svg {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
 }
 
 .community-card h3 {
